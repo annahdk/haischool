@@ -31,17 +31,18 @@ mean(reading.score)
 mean(writing.score)
 
 # anova fuer vergleich aller drei stichproben in der lage 
-bartlett.test(list(math.score, reading.score, writing.score))
+scores  <- list(math.score, reading.score, writing.score)
+shapiro.test(unlist(scores))
+bartlett.test(scores)
 scores_frame <- data.frame(subject = rep(c("math", "reading", "writing"), 
                                c(length(math.score), length(reading.score),
-                                 length(writing.score))), scores = c(math.score,
-                                                                     reading.score,
-                                                                     writing.score))
+                                 length(writing.score))), scores = unlist(scores))
 anova(lm(scores ~ subject, scores_frame))
+# p-Wert: 0.4733, also kann kein Lageuntersch. nachgewiesen werden
 
-# wenn lageunterschied nachgewiesen werden kann, paarweise t-Tests
-
-t.test(math.score, reading.score)
-t.test(writing.score, reading.score)
-t.test(math.score, writing.score)
+## wenn lageunterschied nachgewiesen werden kann, paarweise t-Tests
+## 
+##t.test(math.score, reading.score)
+##t.test(writing.score, reading.score)
+##t.test(math.score, writing.score)
 
