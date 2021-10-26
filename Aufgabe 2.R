@@ -38,11 +38,22 @@ scores_frame <- data.frame(subject = rep(c("math", "reading", "writing"),
                                c(length(math.score), length(reading.score),
                                  length(writing.score))), scores = unlist(scores))
 anova(lm(scores ~ subject, scores_frame))
-# p-Wert: 0.4733, also kann kein Lageuntersch. nachgewiesen werden
+# p-Wert: 0.4733, also kann kein Lageuntersch. nachgewiesen werden (also folgende
+# Bemerkungen eigentlich ueberfluessig)
 
 ## wenn lageunterschied nachgewiesen werden kann, paarweise t-Tests
 ## 
 ##t.test(math.score, reading.score)
 ##t.test(writing.score, reading.score)
 ##t.test(math.score, writing.score)
+
+
+# Visualisierungen
+
+# caption fuer latex: Boxplots zum Lage- und Streuungsvergleich der Noten
+# von Absolventen, deren Essen subventioniert wird 
+
+#pdf(".pdf")
+boxplot(scores, names = c("Mathe", "Lesen", "Schreiben"), ylab = "Leistungen")
+#dev.off()
 
