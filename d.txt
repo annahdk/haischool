@@ -1,22 +1,14 @@
 Der folgende Datensatz StudentsPerformance.csv stammt im Groben von Kaggle (https://www.kaggle.com/spscientist/students-performance-in-exams) 
-und wurde gekürzt und minimal bearbeitet
+und wurde gekürzt und minimal bearbeitet vom Bastiboy
 
 150 Beobachtungen mit 8 Variablen
 
 keine fehlenden Werte !! 
 
 Variablen
-gender - binär: female (73), male (77)
--> Geschlecht der untersuchtsuchten Personen 
 
-race.ethnicity - 5 Gruppen: Gruppe A (14)
-                            Gruppe B (32)
-                            Gruppe C (44)
-                            Gruppe D (41)
-                            Gruppe E (19)
--> sozioökonomischer Hintergrund der beobachteten Personen
-
-parental.level.of.education - 6 Gruppen: Bachelor (16)
+parental.level.of.education - ordinal
+                              6 Gruppen: Bachelor (16)
                                          master (10)
                                          some college (41)
                                          associate (39)
@@ -24,26 +16,41 @@ parental.level.of.education - 6 Gruppen: Bachelor (16)
                                          some high school (23) 
 -> Bildungsniveau der Eltern der Schüler      
 
-lunch - binär: standard (99) , free/reduced (51)
+lunch - nominal und binär: standard (99) , free/reduced (51)
 -> Mittagsessen, wird das Essen subventioniert oder bezahlen die Studenten den normalen Preis  
 
-test.preparation.course - binär: none(104) , completed(46)
+test.preparation.course - nominal und binär: none(104) , completed(46)
 -> Variable, ob die Personen an einem Vorbereitungskurs teilgenommen haben
 
-math.score - numerisch von 0-100: 
+math.score - kardinal von 0-100: 
 summary(edu$math.score)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
    0.00   53.25   65.00   63.95   75.00  100.00
 -> Leistungen im Bereich Mathe
 
-reading.score - numerisch von 17-100:
+reading.score - kardinal von 17-100:
 summary(edu$reading.score)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   17.00   55.00   68.00   66.79   78.75  100.00 
 -> Leistungen im Bereich Lesen
 
-writing.score - numerisch von 10-100: 
+writing.score - kardinal von 10-100: 
 summary(edu$writing.score)  
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   10.00   54.00   67.00   65.53   75.75  100.00 
 -> Leistungen im Bereich schreiben                    
+
+
+
+Nicht so wichtige weitere Variablen:
+
+gender - nominal und binär: female (73), male (77)
+-> Geschlecht der untersuchtsuchten Personen 
+
+race.ethnicity - nominal
+                 5 Gruppen: Gruppe A (14)
+                            Gruppe B (32)
+                            Gruppe C (44)
+                            Gruppe D (41)
+                            Gruppe E (19)
+-> sozioökonomischer Hintergrund der beobachteten Personen
