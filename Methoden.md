@@ -44,3 +44,14 @@ $H_0$ wird abgelehnt, wenn $X^2 > \chi_{(1-\alpha, (k-1), (l-1))}$ ist.
 
 Testet nur für zweiseitige Alternativen
 
+
+### Wilcoxon Rangsummentest
+
+Test für Ordinaldaten. Teste, ob ein aus einer Population zufällig gezogener Wert größer ist als ein zufällig gezogener Wert einer zweiten Population.
+
+
+### Levene-Test, Brown-Forsythe-Test
+
+Tests zum Streuungsvergleich für zwei unabhängige Stichproben
+
+
