@@ -42,3 +42,5 @@ Teststatistik: $X^2=\sum_{i=1}^k \sum_{j=1}^l \frac{(n_{ij}-E(n_{ij}))^2}{E(n_{i
 
 $H_0$ wird abgelehnt, wenn $X^2 > \chi_{(1-\alpha, (k-1), (l-1))}$ ist.
 
+Testet nur für zweiseitige Alternativen
+
