@@ -2,18 +2,20 @@
 edu <- read.csv2("StudentsPerformance.csv")
 attach(edu)
 
-## weitere Notizen: 
+
+## Datensatz-Notizen: 
 unique(parental.level.of.education) # hoechster Abschluss der Eltern: some 
-# high school/college bedeutet nicht abgeschlossen; koennen wir nach Rfolge 
+# high school/college bedeutet nicht abgeschlossen; koennten wir nach Rfolge 
 # ordern, some high school < high school < some college < associate's degree < 
 # bachelor's degree < master's degree 
 unique(race.ethnicity) # fuenf versch. ethnische Gruppen 
 any(is.na(edu)) # keine fehlenden Daten, schon bereinigt 
 
 # fuer aufg 1 das skalenniveau beruecksichtigen. lunch und testPreperationCourse
-# kann man factor und dann as.numeric um tests darauf rechnen zu koennen 
+# kann man als factor umwandeln und dann as.numeric um tests darauf rechnen zu koennen 
 
-## aufgabe 2: u.scheiden sich die Leistungen in den Bereichen Mathe/Lesen/Schreiben 
+
+## Aufgabe 2: u.scheiden sich die Leistungen in den Bereichen Mathe/Lesen/Schreiben 
 ## zwischen Schuelern, deren Essen subventioniert wird und Schuelern, die keine
 ## Unterstuetzung bekommen? 
 
@@ -24,7 +26,7 @@ unique(lunch) # subventioniert vs. nicht subventioniert (2 Auspraegungen)
 
 # Datensatz nach den beiden Gruppen aufteilen:
 lunch_split <- split(edu, lunch) 
-names(lunch_split)[1] <- c("free_reduced")
+names(lunch_split)[1] <- c("free_reduced") # so einfacher zu coden
 attach(lunch_split)
 
 length(free_reduced$race.ethnicity)/length(edu$lunch) # nur 51/150, also ca. 
@@ -44,13 +46,12 @@ mean(reading.score) # 70
 mean(writing.score) # 69
 detach(standard)
 
-# die nicht-subventionierten Schueler haben im Schnitt 10 Score-Punkte
+# --> die nicht-subventionierten Schueler haben im Schnitt 10 Score-Punkte
 # mehr in jedem Fach 
 
 ## Vortests auf Normalverteilung und gleiche Varianz fuer T-Test
-
-# denn Annahme bei t-Test: Das untersuchte Merkmal ist in den Grundgesamtheiten 
-# der beiden Gruppen normalverteilt mit gleichen Varianzen
+# (denn Annahme bei t-Test: Das untersuchte Merkmal ist in den Grundgesamtheiten 
+# der beiden Gruppen normalverteilt mit gleichen Varianzen)
 
 # Rominas verallgemeinerte Vortest-Funktion:
 
@@ -102,22 +103,28 @@ vortests.ttest.faecher("math", standard, free_reduced)
 vortests.ttest.faecher("writing", standard, free_reduced)
 vortests.ttest.faecher("reading", standard, free_reduced)
 
-# die Annahmen koennen beibehalten werden
+# -> p-Werte ueber 0.05 bei lesen und schreiben, die Annahmen koennen hier
+# beibehalten werden, bei Mathe ist p-Wert des Bartlett-Tests bei 0.023,
+# hier muss Alternative zum T-Test her
 
 ## T-Tests zum Lagevergleich der Noten von subventionierten und nicht
-## subventionierten Schuelern 
+## subventionierten Schuelern (fuer Schreiben und Lesen)
 
 # weitere Annahme: die Noten der subventionierten haengen nicht von den Noten der 
 # nicht-subventionierten Schueler ab 
 
-t.test(free_reduced$math.score, standard$math.score)
 t.test(free_reduced$reading.score, standard$reading.score)
 t.test(free_reduced$writing.score, standard$writing.score)
 
-# alle p-Werte unter 0.05 -> Lageunterschied signifikant 
+# beide p-Werte unter 0.05 -> Lageunterschied signifikant 
 # keine Adjustierung des p-Wertes, da nicht die selben Daten mehrmals benutzt (?)
 
-# man kann auch Unterschied generell, also faecherunspezifisch testen: 
+## Lagevergleich fuer nicht normalverteilte Stichproben für das Fach Mathe 
+
+
+
+
+## man koennte auch Unterschied generell, also faecherunspezifisch testen: 
 
 attach(free_reduced)
 total_free_reduced <- c(math.score, reading.score, writing.score)
@@ -127,22 +134,36 @@ attach(standard)
 total_standard <- c(math.score, reading.score, writing.score)
 detach(standard)
 
-shapiro.test(total_free_reduced)
+shapiro.test(total_free_reduced) 
 shapiro.test(total_standard)
-bartlett.test(list(total_free_reduced, total_standard)) # hier koennen keine
-# gleichen Varianzen mehr angenommen werden (vielleicht Ausreisser?)
-
-# t.test(total_free_reduced, total_standard) 
-# signifikanter unterschied (hier muesste man jetzt aber adjustieren, wenn man
-# wirklich beide Tests macht)
+# Normalverteilung --> check 
+bartlett.test(list(total_free_reduced, total_standard)) 
+# hier koennen aber keine gleichen Varianzen angenommen werden (wohl wegen Mathe)
+# anderer Test auf Lagevergleich:
 
 
-# Visualisierungen
+## Visualisierungen
 
-# caption fuer latex: Boxplots zum Lage- und Streuungsvergleich der Noten
-# von Absolventen, deren Essen subventioniert wird 
+# caption fuer latex: Boxplots zum Lage- und Streuungsvergleich Schulleistungen 
+# von Schuelern mit und ohne Subvention des Mittagessens
 
-#pdf(".pdf")
-#boxplot(scores, names = c("Mathe", "Lesen", "Schreiben"), ylab = "Leistungen")
+#pdf("boxplots_lunch.pdf")
+
+# Vergleich aller Faecher zusammen:
+# boxplot(list(total_free_reduced, total_standard), names = c("ja", "nein"), 
+        xlab = "Subvention", ylab = "Leistungen", main = "Vergleich von Schülern
+        mit und ohne staatliche Unterstützung") 
+
+# Vergleich nach Faechern:
+op <- par(mfrow = c(1,3), oma = c(0,0,2,0))
+boxplot(list(free_reduced$reading.score, standard$reading.score), names = c("ja", "nein"), 
+        xlab = "Subvention", ylab = "Leistungen", main = "Lesen")
+boxplot(list(free_reduced$writing.score, standard$writing.score), names = c("ja", "nein"), 
+        xlab = "Subvention", ylab = "Leistungen", main = "Schreiben")
+boxplot(list(free_reduced$math.score, standard$math.score), names = c("ja", "nein"), 
+        xlab = "Subvention", ylab = "Leistungen", main = "Mathe")
+title("Vergleich von Schülern
+        mit und ohne staatliche Unterstützung", outer = TRUE)
+par(op)
 #dev.off()
 
