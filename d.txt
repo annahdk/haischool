@@ -10,8 +10,8 @@ Variablen
 parental.level.of.education - ordinal
                               6 Gruppen: Bachelor (16)
                                          master (10)
-                                         some college (41)
                                          associate (39)
+                                         some college (41)
                                          high school (21)
                                          some high school (23) 
 -> Bildungsniveau der Eltern der Schüler      
