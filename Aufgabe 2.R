@@ -107,6 +107,50 @@ vortests.ttest.faecher("reading", standard, free_reduced)
 # beibehalten werden, bei Mathe ist p-Wert des Bartlett-Tests bei 0.023,
 # hier muss Alternative zum T-Test her
 
+## Visualisierung der Normalverteilungsueberpruefung
+
+# Histogramme mit eingezeichneter Normalverteilungskurve (kann sein dass hier 
+# noch ein Fehler drin steckt)
+
+hist.faecher <- function(x){
+  hist(x, xlim = c(0,150), freq = FALSE)
+  curve(dnorm(x, mean(x), sd(x)), add = TRUE)
+}
+
+op <- par(mfrow = c(2,3))
+attach(standard)
+hist.faecher(writing.score)
+hist.faecher(reading.score)
+hist.faecher(math.score)
+detach(standard)
+attach(free_reduced)
+hist.faecher(writing.score)
+hist.faecher(reading.score)
+hist.faecher(math.score)
+detach(free_reduced)
+
+# QQ-Plots
+
+attach(standard)
+qqnorm(writing.score)
+qqline(writing.score)
+qqnorm(reading.score)
+qqline(reading.score)
+qqnorm(math.score)
+qqline(nath.score)
+detach(standard)
+attach(free_reduced)
+qqnorm(writing.score)
+qqline(writing.score)
+qqnorm(reading.score)
+qqline(reading.score)
+qqnorm(math.score)
+qqline(math.score)
+detach(free_reduced)
+par(op)
+
+
+
 ## T-Tests zum Lagevergleich der Noten von subventionierten und nicht
 ## subventionierten Schuelern (fuer Schreiben und Lesen)
 
@@ -166,4 +210,6 @@ title("Vergleich von Schülern
         mit und ohne staatliche Unterstützung", outer = TRUE)
 par(op)
 #dev.off()
+
+
 
