@@ -1,0 +1,45 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[german]{babel}
+\usepackage{amsmath}
+\usepackage[table]  {xcolor}
+\usepackage{graphicx}
+\usepackage { tabularx }
+\usepackage{amsfonts}
+\usepackage[paper=a4paper,left=20mm,right=20mm,top=20mm,bottom=20mm]{geometry}
+\usepackage{amssymb}
+\usepackage{blindtext}   % Für Beispieltexte
+\usepackage{enumitem}
+
+
+\author{Tim Ritter}
+
+
+\begin{document}
+
+\begin{table}[h!]
+\caption{Annahmen}\bigskip
+\centering
+\begin{tabular}{l|l}
+\textbf{Problem} & \textbf{Erklärung} \\
+Unabhängig- & könnte abhängig sein weil none ungleich nicht teilgenommen \\
+keit  & aber wir nehmen unabhängig an weil es unterschiedliche Personen sind\\
+stetige &  vereinfachte Analyse der Daten, shapiro wilk test lehnt die normalverteilung nicht ab (für alle),\\
+scores & qqplot und Histogramm deutet auf eine NV hin, Rangordnung (100 besser als 0 Punkte), \\
+pro & interpretierbare Abstände, arithmetisches Mittel verwendbar wegen intervallskaliert   \\
+stetige scores & kritischer p-Wert, qqplot hat Ausreisser, Wertebereich ist von 0-100; \\
+ contra & sollte aber zwischen -$\inf$ bis $\inf$,  \\
+Geschlecht nominal & weil kein Rang \\
+Ethnie nominal & weil kein Rang \\
+Bildung Eltern ordinal & weil Rang \\
+Mittagsessen nominal & weil kein Rang \\
+Vorkurs nominal & weil kein Rang \\
+Leistungen kardinal & weil normalverteilt \\
+statistische Methoden & nach präsi dazu
+
+
+\end{tabular}
+\end{table}
+
+statistische Methoden: p-Wert ?, statistischer Test?, Fehler 1./2.Art?, Verteilungen ?, niveau adjustierung?
+\end{document}
