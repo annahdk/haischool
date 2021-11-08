@@ -51,6 +51,7 @@ Testet nur für zweiseitige Alternativen
 * Teste, ob ein aus einer Population zufällig gezogener Wert größer ist als ein zufällig gezogener Wert einer zweiten Population
 * Wenn keine stetige Verteilung vorliegt müssen Bindungen beachtet werden!
 * Wird immer dann verwendet, wenn Normalverteilungsannahme nicht plausibel erscheint
+* Aufpassen auf Bindungen
 
 
 ### Levene-Test, Brown-Forsythe-Test
