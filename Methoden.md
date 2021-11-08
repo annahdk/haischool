@@ -47,7 +47,7 @@ Testet nur für zweiseitige Alternativen
 
 ### Wilcoxon Rangsummentest
 
-Test für Ordinaldaten. Teste, ob ein aus einer Population zufällig gezogener Wert größer ist als ein zufällig gezogener Wert einer zweiten Population.
+Test für (mindestens) Ordinaldaten. Teste, ob ein aus einer Population zufällig gezogener Wert größer ist als ein zufällig gezogener Wert einer zweiten Population. Wenn keine stetige Verteilung vorliegt müssen Bindungen beachtet werden!
 
 
 ### Levene-Test, Brown-Forsythe-Test
