@@ -43,6 +43,9 @@ shapiro.test(unprepared$writing.score)$p.value# 0.3569
 
 ### Alle sind normalverteilt aber math score unprepared kritisch
 
+# anna: wenn man beim math score den Ausreisser 0 rausschmeisst ist p-Wert 
+# deutlich hoeher
+
 #Vortest (Bartlett auf Varianzgleichheit)
 
 
