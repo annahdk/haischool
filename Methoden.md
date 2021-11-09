@@ -1,5 +1,8 @@
 ## Übersicht über die möglichen Methoden
 
+### Mann-Whitney-U-Test
+möglicherweise der way to go
+
 ### Zweistichproben t-Test
 Voraussetzungen:
 
