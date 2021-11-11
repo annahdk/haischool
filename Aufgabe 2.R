@@ -2,22 +2,11 @@
 edu <- read.csv2("StudentsPerformance.csv")
 attach(edu)
 
+sum(edu$test.preparation.course == "completed")/
+  length(edu$test.preparation.course) 
+# 31 % der Schueler*innen haben einen Vorkurs gemacht 
 
-## Datensatz-Notizen: 
-unique(parental.level.of.education) # hoechster Abschluss der Eltern: some 
-# high school/college bedeutet nicht abgeschlossen; koennten wir nach Rfolge 
-# ordern, some high school < high school < some college < associate's degree < 
-# bachelor's degree < master's degree 
-unique(race.ethnicity) # fuenf versch. ethnische Gruppen 
-any(is.na(edu)) # keine fehlenden Daten, schon bereinigt 
-
-# fuer aufg 1 das skalenniveau beruecksichtigen. lunch und testPreperationCourse
-# kann man als factor umwandeln und dann as.numeric um tests darauf rechnen zu koennen 
-
-
-## Aufgabe 2: u.scheiden sich die Leistungen in den Bereichen Mathe/Lesen/Schreiben 
-## zwischen Schuelern, deren Essen subventioniert wird und Schuelern, die keine
-## Unterstuetzung bekommen? 
+## Aufgabe 2
 
 # annahme: 100 ist beste Note, 0 ist schlechteste Note 
 
@@ -29,8 +18,8 @@ lunch_split <- split(edu, lunch)
 names(lunch_split)[1] <- c("free_reduced") # so einfacher zu coden
 attach(lunch_split)
 
-length(free_reduced$race.ethnicity)/length(edu$lunch) # nur 51/150, also ca. 
-# 1/3 der probanden bekommt das Essen subventioniert 
+length(free_reduced$race.ethnicity)/length(edu$lunch) # nur 51/150, also  
+# 34 % der probanden bekommt das Essen subventioniert 
 
 # selbst erstmal Ueberblick ueber Mittelwerte in den einzelnen Faechern je nach 
 # lunch-Gruppe verschaffen: 
@@ -105,19 +94,20 @@ vortests.ttest.faecher("reading", standard, free_reduced)
 
 # -> p-Werte ueber 0.05 bei lesen und schreiben, die Annahmen koennen hier
 # beibehalten werden, bei Mathe ist p-Wert des Bartlett-Tests bei 0.023,
-# hier muss Alternative zum T-Test her
+# hier muss Alternative zum T-Test her: Welch-Test ist wie t-Test bei versch. 
+# Varianzen
 
 ## Visualisierung der Normalverteilungsueberpruefung
 
 # Histogramme mit eingezeichneter Normalverteilungskurve (kann sein dass hier 
-# noch ein Fehler drin steckt)
+# noch ein Fehler drin steckt, sieht nicht passend aus)
 
 hist.faecher <- function(x){
-  hist(x, xlim = c(0,150), freq = FALSE)
-  curve(dnorm(x, mean(x), sd(x)), add = TRUE)
+  hist(x, xlim = c(0, 150), freq = FALSE)
+  curve(dnorm(x, mean = mean(x), sd = sd(x)), from = 0, to = 150, add = TRUE)
 }
 
-op <- par(mfrow = c(2,3))
+op <- par(mfrow = c(2,3), cex = 0.3)
 attach(standard)
 hist.faecher(writing.score)
 hist.faecher(reading.score)
@@ -127,89 +117,96 @@ attach(free_reduced)
 hist.faecher(writing.score)
 hist.faecher(reading.score)
 hist.faecher(math.score)
-detach(free_reduced)
-
-# QQ-Plots
-
-attach(standard)
-qqnorm(writing.score)
-qqline(writing.score)
-qqnorm(reading.score)
-qqline(reading.score)
-qqnorm(math.score)
-qqline(nath.score)
-detach(standard)
-attach(free_reduced)
-qqnorm(writing.score)
-qqline(writing.score)
-qqnorm(reading.score)
-qqline(reading.score)
-qqnorm(math.score)
-qqline(math.score)
 detach(free_reduced)
 par(op)
 
 
 
-## T-Tests zum Lagevergleich der Noten von subventionierten und nicht
-## subventionierten Schuelern (fuer Schreiben und Lesen)
+# QQ-Plots
+#pdf("qq_lunch.pdf", width = 13)
+op <- par(mfrow = c(2,3), cex.main = 1.5)
+opq <- par(mar = c(5,6.5,4,2) + 0.1)
+attach(standard)
+qqnorm(writing.score, main = "Schreiben", xlab = "", ylab = 
+         "Empirische Quantile")
+qqline(writing.score)
+title(ylab = "nicht subventioniert", line = 5, cex.lab = 1.5, font.lab = 2)
+par(opq)
+qqnorm(reading.score, main = "Lesen", xlab = "", ylab = "")
+qqline(reading.score)
+qqnorm(math.score, main = "Mathe", xlab = "", ylab = "")
+qqline(math.score)
+detach(standard)
+opq <- par(mar = c(5,6.5,4,2) + 0.1)
+attach(free_reduced)
+
+qqnorm(writing.score, xlab = "", ylab = 
+        "Empirische Quantile", main = "", mar = c(5,6,4,2) + 0.1)
+qqline(writing.score)
+title(ylab = "subventioniert", line = 5, cex.lab = 1.5, font.lab = 2)
+par(opq)
+qqnorm(reading.score, xlab = "Theoretische Quantile", ylab = "", main = "")
+qqline(reading.score)
+qqnorm(math.score, xlab = "", ylab = "", main = "")
+qqline(math.score)
+detach(free_reduced)
+#dev.off()
+par(op)
+
+## T-Tests und Welch-Test zum Lagevergleich der Noten von subventionierten und nicht
+## subventionierten Schuelern 
 
 # weitere Annahme: die Noten der subventionierten haengen nicht von den Noten der 
 # nicht-subventionierten Schueler ab 
 
-t.test(free_reduced$reading.score, standard$reading.score)
-t.test(free_reduced$writing.score, standard$writing.score)
+# lesen und schreiben - T-Test
+t.test(free_reduced$reading.score, standard$reading.score, var.equal = TRUE)
+t.test(free_reduced$writing.score, standard$writing.score, var.equal = TRUE)
 
-# beide p-Werte unter 0.05 -> Lageunterschied signifikant 
+## mathe - Welch-Test
+t.test(free_reduced$math.score, standard$math.score)  
+
+# alle p-Werte unter 0.05 -> Lageunterschied signifikant 
 # keine Adjustierung des p-Wertes, da nicht die selben Daten mehrmals benutzt (?)
 
-## Lagevergleich fuer nicht normalverteilte Stichproben für das Fach Mathe 
-
-
-
-
 ## man koennte auch Unterschied generell, also faecherunspezifisch testen: 
+## (aber laut Basti nicht gewollt)
 
 attach(free_reduced)
 total_free_reduced <- c(math.score, reading.score, writing.score)
 detach(free_reduced)
-
 attach(standard)
 total_standard <- c(math.score, reading.score, writing.score)
 detach(standard)
-
 shapiro.test(total_free_reduced) 
 shapiro.test(total_standard)
 # Normalverteilung --> check 
 bartlett.test(list(total_free_reduced, total_standard)) 
 # hier koennen aber keine gleichen Varianzen angenommen werden (wohl wegen Mathe)
-# anderer Test auf Lagevergleich:
-
+# also theoretisch wieder Welch-Test 
 
 ## Visualisierungen
 
-# caption fuer latex: Boxplots zum Lage- und Streuungsvergleich Schulleistungen 
-# von Schuelern mit und ohne Subvention des Mittagessens
-
-#pdf("boxplots_lunch.pdf")
-
 # Vergleich aller Faecher zusammen:
 # boxplot(list(total_free_reduced, total_standard), names = c("ja", "nein"), 
-        xlab = "Subvention", ylab = "Leistungen", main = "Vergleich von Schülern
-        mit und ohne staatliche Unterstützung") 
+#        xlab = "Subvention", ylab = "Leistungen", main = "Vergleich von Schülern
+#        mit und ohne staatliche Unterstützung") 
 
+#pdf("boxplots_lunch.pdf", width = 13)
 # Vergleich nach Faechern:
-op <- par(mfrow = c(1,3), oma = c(0,0,2,0))
-boxplot(list(free_reduced$reading.score, standard$reading.score), names = c("ja", "nein"), 
-        xlab = "Subvention", ylab = "Leistungen", main = "Lesen")
+op2 <- par(mfrow = c(1,3), oma = c(0,0,2,0), cex.lab = 1.5, cex.main = 1.5)
 boxplot(list(free_reduced$writing.score, standard$writing.score), names = c("ja", "nein"), 
-        xlab = "Subvention", ylab = "Leistungen", main = "Schreiben")
+        main = "Schreiben", ylim = c(0,100), ylab = "Leistung")
+boxplot(list(free_reduced$reading.score, standard$reading.score), names = c("ja", "nein"), 
+        xlab = "Subvention", main = "Lesen", ylim = c(0,100)) # range?
 boxplot(list(free_reduced$math.score, standard$math.score), names = c("ja", "nein"), 
-        xlab = "Subvention", ylab = "Leistungen", main = "Mathe")
-title("Vergleich von Schülern
-        mit und ohne staatliche Unterstützung", outer = TRUE)
-par(op)
+        main = "Mathe", ylim = c(0,100))
+title(main = "Vergleich von Schüler*innen mit und ohne finanzielle Unterstützung", 
+      outer = TRUE)
 #dev.off()
+par(op2)
+
+
 
 
 
