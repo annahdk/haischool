@@ -30,9 +30,10 @@ vortests.ttest.faecher <- function(score, gruppe1, gruppe2){
   if(norm_gruppe1 < 0.05 | norm_gruppe2 < 0.05){
     cat("Folgende Stichprobe ist nicht normalverteilt: \n")
     if(norm_gruppe1 < 0.05){
-      cat("Auf den Test vorbereitet, P-Wert:", norm_gruppe1)
-    }else{
-      cat("Nicht auf den Test vorbereitet, P-Wert:", norm_gruppe2)
+      cat("Gruppe 1, P-Wert:", norm_gruppe1)
+    }
+    if(norm_gruppe2 < 0.05){
+      cat("Gruppe 2, P-Wert:", norm_gruppe2)
     }
   }
   
@@ -58,25 +59,26 @@ qqmatrix <- function(gruppe1, gruppe2, ylab1, ylab2){
   opq <- par(mar = c(5,6.5,4,2) + 0.1)
   attach(gruppe1)
   qqnorm(writing.score, main = "Schreiben", xlab = "", ylab = 
-           "Empirische Quantile")
+           "Empirische Quantile", ylim = c(0,100))
   qqline(writing.score)
   title(ylab = ylab1, line = 5, cex.lab = 1.5, font.lab = 2)
   par(opq)
-  qqnorm(reading.score, main = "Lesen", xlab = "", ylab = "")
+  qqnorm(reading.score, main = "Lesen", xlab = "", ylab = "", ylim = c(0,100))
   qqline(reading.score)
-  qqnorm(math.score, main = "Mathe", xlab = "", ylab = "")
+  qqnorm(math.score, main = "Mathe", xlab = "", ylab = "", ylim = c(0,100))
   qqline(math.score)
   detach(gruppe1)
   opq <- par(mar = c(5,6.5,4,2) + 0.1)
   attach(gruppe2)
   qqnorm(writing.score, xlab = "", ylab = 
-           "Empirische Quantile", main = "", mar = c(5,6,4,2) + 0.1)
+           "Empirische Quantile", main = "", mar = c(5,6,4,2) + 0.1, ylim = c(0,100))
   qqline(writing.score)
   title(ylab = ylab2, line = 5, cex.lab = 1.5, font.lab = 2)
   par(opq)
-  qqnorm(reading.score, xlab = "Theoretische Quantile", ylab = "", main = "")
+  qqnorm(reading.score, xlab = "Theoretische Quantile", ylab = "", main = "",
+         ylim = c(0,100))
   qqline(reading.score)
-  qqnorm(math.score, xlab = "", ylab = "", main = "")
+  qqnorm(math.score, xlab = "", ylab = "", main = "", ylim = c(0,100))
   qqline(math.score)
   detach(gruppe2)
   par(op)

@@ -2,6 +2,7 @@
 edu <- read.csv2("StudentsPerformance.csv")
 attach(edu)
 
+# zu aufgabe 1: 
 sum(edu$test.preparation.course == "completed")/
   length(edu$test.preparation.course) 
 # 31 % der Schueler*innen haben einen Vorkurs gemacht 
@@ -69,9 +70,10 @@ vortests.ttest.faecher <- function(score, gruppe1, gruppe2){
   if(norm_gruppe1 < 0.05 | norm_gruppe2 < 0.05){
     cat("Folgende Stichprobe ist nicht normalverteilt: \n")
     if(norm_gruppe1 < 0.05){
-      cat("Auf den Test vorbereitet, P-Wert:", norm_gruppe1)
-    }else{
-      cat("Nicht auf den Test vorbereitet, P-Wert:", norm_gruppe2)
+      cat("Gruppe 1, P-Wert:", norm_gruppe1)
+    }
+    if(norm_gruppe2 < 0.05){
+      cat("Gruppe 2, P-Wert:", norm_gruppe2)
     }
   }
   
@@ -123,35 +125,41 @@ par(op)
 
 
 # QQ-Plots
-#pdf("qq_lunch.pdf", width = 13)
-op <- par(mfrow = c(2,3), cex.main = 1.5)
-opq <- par(mar = c(5,6.5,4,2) + 0.1)
-attach(standard)
-qqnorm(writing.score, main = "Schreiben", xlab = "", ylab = 
-         "Empirische Quantile")
-qqline(writing.score)
-title(ylab = "nicht subventioniert", line = 5, cex.lab = 1.5, font.lab = 2)
-par(opq)
-qqnorm(reading.score, main = "Lesen", xlab = "", ylab = "")
-qqline(reading.score)
-qqnorm(math.score, main = "Mathe", xlab = "", ylab = "")
-qqline(math.score)
-detach(standard)
-opq <- par(mar = c(5,6.5,4,2) + 0.1)
-attach(free_reduced)
+qqmatrix <- function(gruppe1, gruppe2, ylab1, ylab2){
+  op <- par(mfrow = c(2,3), cex.main = 1.5)
+  opq <- par(mar = c(5,6.5,4,2) + 0.1)
+  attach(gruppe1)
+  qqnorm(writing.score, main = "Schreiben", xlab = "", ylab = 
+           "Empirische Quantile", ylim = c(0,100))
+  qqline(writing.score)
+  title(ylab = ylab1, line = 5, cex.lab = 1.5, font.lab = 2)
+  par(opq)
+  qqnorm(reading.score, main = "Lesen", xlab = "", ylab = "", ylim = c(0,100))
+  qqline(reading.score)
+  qqnorm(math.score, main = "Mathe", xlab = "", ylab = "", ylim = c(0,100))
+  qqline(math.score)
+  detach(gruppe1)
+  opq <- par(mar = c(5,6.5,4,2) + 0.1)
+  attach(gruppe2)
+  qqnorm(writing.score, xlab = "", ylab = 
+           "Empirische Quantile", main = "", mar = c(5,6,4,2) + 0.1, ylim = c(0,100))
+  qqline(writing.score)
+  title(ylab = ylab2, line = 5, cex.lab = 1.5, font.lab = 2)
+  par(opq)
+  qqnorm(reading.score, xlab = "Theoretische Quantile", ylab = "", main = "",
+         ylim = c(0,100))
+  qqline(reading.score)
+  qqnorm(math.score, xlab = "", ylab = "", main = "", ylim = c(0,100))
+  qqline(math.score)
+  detach(gruppe2)
+  par(op)
+}  
 
-qqnorm(writing.score, xlab = "", ylab = 
-        "Empirische Quantile", main = "", mar = c(5,6,4,2) + 0.1)
-qqline(writing.score)
-title(ylab = "subventioniert", line = 5, cex.lab = 1.5, font.lab = 2)
-par(opq)
-qqnorm(reading.score, xlab = "Theoretische Quantile", ylab = "", main = "")
-qqline(reading.score)
-qqnorm(math.score, xlab = "", ylab = "", main = "")
-qqline(math.score)
-detach(free_reduced)
+#pdf("qq_lunch.pdf", width = 13)
+qqmatrix(standard, free_reduced, "nicht subventioniert",
+         "subventioniert")
 #dev.off()
-par(op)
+
 
 ## T-Tests und Welch-Test zum Lagevergleich der Noten von subventionierten und nicht
 ## subventionierten Schuelern 
@@ -192,19 +200,23 @@ bartlett.test(list(total_free_reduced, total_standard))
 #        xlab = "Subvention", ylab = "Leistungen", main = "Vergleich von Schülern
 #        mit und ohne staatliche Unterstützung") 
 
-#pdf("boxplots_lunch.pdf", width = 13)
+
 # Vergleich nach Faechern:
-op2 <- par(mfrow = c(1,3), oma = c(0,0,2,0), cex.lab = 1.5, cex.main = 1.5)
-boxplot(list(free_reduced$writing.score, standard$writing.score), names = c("ja", "nein"), 
-        main = "Schreiben", ylim = c(0,100), ylab = "Leistung")
-boxplot(list(free_reduced$reading.score, standard$reading.score), names = c("ja", "nein"), 
-        xlab = "Subvention", main = "Lesen", ylim = c(0,100)) # range?
-boxplot(list(free_reduced$math.score, standard$math.score), names = c("ja", "nein"), 
-        main = "Mathe", ylim = c(0,100))
-title(main = "Vergleich von Schüler*innen mit und ohne finanzielle Unterstützung", 
-      outer = TRUE)
+boxpl <- function(gruppe1, gruppe2, xlab){
+  op2 <- par(mfrow = c(1,3), cex.lab = 1.5, cex.main = 1.5)
+  boxplot(list(gruppe1$writing.score, gruppe2$writing.score), names = c("ja", "nein"), 
+          main = "Schreiben", ylim = c(0,100), ylab = "Leistung")
+  boxplot(list(gruppe1$reading.score, gruppe2$reading.score), names = c("ja", "nein"), 
+          xlab = xlab, main = "Lesen", ylim = c(0,100)) # range?
+  boxplot(list(gruppe1$math.score, gruppe2$math.score), names = c("ja", "nein"), 
+          main = "Mathe", ylim = c(0,100))
+  par(op2)
+}
+
+#pdf("boxplots_lunch.pdf", width = 13)
+boxpl(lunch_split$standard, lunch_split$free_reduced, "Subvention")
 #dev.off()
-par(op2)
+
 
 
 
