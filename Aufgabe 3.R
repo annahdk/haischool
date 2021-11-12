@@ -57,3 +57,29 @@ mosaicplot(test, col=c("black","white"))
 
 chisq.test(as.numeric(factor(edu$test.preparation.course)), as.numeric(factor(edu$parental.level.of.education)))
 chisq.test(test)
+
+
+#### Alternativ nur Bachelor und Master als Gruppe
+
+parent <- c("some high school", "high school", "some college", "associate's degree", 
+           "bachelor's degree", "master's degree" )
+
+parents <- factor(edu$parental.level.of.education, levels = parent, ordered = TRUE)
+
+table(parents, edu$test.preparation.course)
+mosaicplot(table(parents, edu$test.preparation.course), color = c("red", "blue"),
+           main = "", xlab = "Schulabschluss Eltern", ylab = "Vorkurs")
+
+fisher.test(edu$test.preparation.course, parents)
+chisq.test(parents, edu$test.preparation.course)
+
+parents2 <- edu$parental.level.of.education
+parents2[parents2 %in% c("bachelor's degree", "master's degree")] <- "higher"
+parent2 <- c("some high school", "high school", "some college", "associate's degree", 
+            "higher")
+parents2 <- factor(parents2, levels = parent2, ordered = TRUE)
+
+table(parents2, edu$test.preparation.course)
+mosaicplot(table(parents2, edu$test.preparation.course), color = c("red", "blue"),
+           main = "", xlab = "Schulabschluss Eltern", ylab = "Vorkurs")
+
