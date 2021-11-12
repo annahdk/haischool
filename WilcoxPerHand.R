@@ -53,11 +53,13 @@ wilcoxPerHand <- function(x, y){
   # Berechne den Erwartungswert der Teststatistik
   E_T <- (n * (n + m + 1)) / 2
   
+  # Nebenrechnung fuer Varianz unter Bindungen
   b <- 0
   for(i in 1:length(names(table(comb)))){
     b <- b + (as.numeric(table(comb)[i])^3 - as.numeric(table(comb))[i])
   }
   
+  # Berechnung der Varianz mit Bindungen
   V_T <- ((n * m) / 12) * (n + m + 1 - (1 / ((n + m) * (n + m - 1) * b)))
   
   return(list("Teststatistik" = Z <- (T_X - E_T) / sqrt(V_T),
