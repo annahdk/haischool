@@ -101,12 +101,11 @@ vortests.ttest.faecher("reading", standard, free_reduced)
 
 ## Visualisierung der Normalverteilungsueberpruefung
 
-# Histogramme mit eingezeichneter Normalverteilungskurve (kann sein dass hier 
-# noch ein Fehler drin steckt, sieht nicht passend aus)
+# Histogramme mit eingezeichneter Normalverteilungskurve 
 
 hist.faecher <- function(x){
-  hist(x, xlim = c(0, 150), freq = FALSE)
-  curve(dnorm(x, mean = mean(x), sd = sd(x)), from = 0, to = 150, add = TRUE)
+  hist(x, xlim = c(0, 130), freq = FALSE, breaks = 20)
+  lines(seq(0, 130, 0.1), dnorm(seq(0,130, 0.1), mean = mean(x), sd = sd(x)), add = TRUE)
 }
 
 op <- par(mfrow = c(2,3), cex = 0.3)
