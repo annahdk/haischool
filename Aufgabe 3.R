@@ -83,3 +83,12 @@ table(parents2, edu$test.preparation.course)
 mosaicplot(table(parents2, edu$test.preparation.course), color = c("red", "blue"),
            main = "", xlab = "Schulabschluss Eltern", ylab = "Vorkurs")
 
+# deutsche Beschriftung 
+pdf("mosaik.pdf", width = 13)
+par(cex = 0.66, cex.lab = 1.5)
+vorkurs_deutsch <- as.factor(edu$test.preparation.course) 
+levels(vorkurs_deutsch) <- c("ja", "nein")
+mosaicplot(table(parents2, vorkurs_deutsch), color = c("blue", "grey"),
+          main = "", xlab = "Schulabschluss Eltern", ylab = "Vorkurs", cex.axis = 1)
+dev.off()
+
